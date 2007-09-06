@@ -3,7 +3,7 @@
 %define rel 0.%pre.1
 %define fname %name-%version-%pre
 %else 
-%define rel 1
+%define rel 2
 %define fname %name-%version
 %endif
 Summary: A gtk+ based diagram creation program
@@ -39,11 +39,9 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	libtool intltool gnome-common
 Requires:	pygtk2.0
 #gw help viewer also for non-GNOME
-Requires:	yelp
-%if %mdkversion > 200600
+Suggests:	yelp
 Requires(post): desktop-file-utils
 Requires(postun): desktop-file-utils
-%endif
 
 %description
 Dia is a program designed to be much like the Windows
@@ -77,19 +75,13 @@ rm -fr $RPM_BUILD_ROOT
 rm -f %buildroot%_datadir/gnome/help/%name/C
 mv %buildroot%_datadir/gnome/help/%name/en %buildroot%_datadir/gnome/help/%name/C
 
-mkdir -p $RPM_BUILD_ROOT%{_menudir}
-
-cat <<EOF >$RPM_BUILD_ROOT%{_menudir}/%{name}
-?package(%{name}): needs="x11" section="Office/Graphs" title="Dia" longtitle="A gtk+ based diagram creation program" command="%{_bindir}/dia" icon="dia.png" xdg="true"
-EOF
+#fix icon and invalid version in bugzilla field
+sed -i -e 's/@\(%{version}\)@/\1/g' -e 's/Icon=dia_gnome_icon.png/Icon=dia_gnome_icon/g' $RPM_BUILD_ROOT%{_datadir}/applications/dia.desktop
 
 desktop-file-install --vendor="" \
   --remove-category="Application" \
   --add-category="GTK" \
-  --add-category="Office" \
-  --add-category="Chart" \
-  --add-category="X-MandrivaLinux-Office-Graphs" \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/*
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/dia.desktop
 
 mkdir -p $RPM_BUILD_ROOT/%{_miconsdir}
 mkdir -p $RPM_BUILD_ROOT/%{_liconsdir}
@@ -131,7 +123,6 @@ rm -fr $RPM_BUILD_ROOT
 %{_datadir}/mime-info/*
 %{_datadir}/pixmaps/*
 %{_datadir}/applications/dia.desktop
-%{_menudir}/%{name}
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
 %{_liconsdir}/%{name}.png
