@@ -19,7 +19,6 @@ Patch1: dia-0.96-pre2-help.patch
 #gw replace unknown quotation marks by UTF-8 characters
 Patch2: dia-0.96-pre3-docs.patch
 URL: http://www.gnome.org/projects/dia 
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	docbook-utils
 BuildRequires:	pygtk2.0
 BuildRequires:	python-devel
