@@ -103,15 +103,11 @@ rm -fr $RPM_BUILD_ROOT
 
 %post
 %{update_menus}
-%if %mdkversion > 200600
 %{update_desktop_database}
-%endif
 
 %postun
 %{clean_menus}
-%if %mdkversion > 200600
 %{clean_desktop_database}
-%endif
 
 %files -f %{name}.lang
 %defattr(-,root,root)
