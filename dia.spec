@@ -101,13 +101,17 @@ chmod 644 %buildroot%_libdir/%name/*.la
 %clean
 rm -fr $RPM_BUILD_ROOT
 
+%if %mdkversion < 200900
 %post
 %{update_menus}
 %{update_desktop_database}
+%endif
 
+%if %mdkversion < 200900
 %postun
 %{clean_menus}
 %{clean_desktop_database}
+%endif
 
 %files -f %{name}.lang
 %defattr(-,root,root)
