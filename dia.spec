@@ -28,7 +28,7 @@ BuildRequires:	png-devel
 BuildRequires:	libxslt-devel
 BuildRequires:	cairo-devel
 BuildRequires:	intltool
-BuildRequires:	ImageMagick
+BuildRequires:	imagemagick
 BuildRequires:	autoconf2.5
 BuildRequires:  PyXML
 BuildRequires:	libxslt-proc
