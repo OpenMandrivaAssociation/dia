@@ -3,7 +3,7 @@
 %define rel 0.%pre.1
 %define fname %name-%version-%pre
 %else 
-%define rel 5
+%define rel 6
 %define fname %name-%version
 %endif
 Summary: A gtk+ based diagram creation program
@@ -19,6 +19,9 @@ Patch1: dia-0.96-pre2-help.patch
 #gw replace unknown quotation marks by UTF-8 characters
 Patch2: dia-0.96-pre3-docs.patch
 Patch3: dia-0.96.1-format-strings.patch
+#gw from Fedora, fix security problem:
+# http://secunia.com/Advisories/33672/
+Patch4: dia-0.96.1-pythonpath.patch
 URL: http://www.gnome.org/projects/dia 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	docbook-utils
@@ -57,6 +60,8 @@ diagrams to a custom fileformat and export to postscript.
 %patch1 -p1 -b .help
 %patch2 -p1 -b .fixdoc
 %patch3 -p1
+%patch4 -p1
+
 # gw fix doctype
 perl -pi -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
 
