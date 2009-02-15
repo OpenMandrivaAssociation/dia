@@ -1,27 +1,26 @@
-%define pre 0
+%define pre pre1
 %if %pre
 %define rel 0.%pre.1
 %define fname %name-%version-%pre
 %else 
-%define rel 6
+%define rel 1
 %define fname %name-%version
 %endif
 Summary: A gtk+ based diagram creation program
 Name: dia
-Version: 0.96.1
+Version: 0.97
 Release: %mkrel %rel
 License: GPLv2+
 Group: Office
 Source: ftp://ftp.gnome.org/pub/GNOME/sources/%name/%version/%{fname}.tar.bz2
-Patch: dia-0.95-pre1-use-own-gtkrc.patch
+Patch: dia-0.97-pre1-use-own-gtkrc.patch
 #gw quick hack to find the gnome documentation
 Patch1: dia-0.96-pre2-help.patch
-#gw replace unknown quotation marks by UTF-8 characters
-Patch2: dia-0.96-pre3-docs.patch
-Patch3: dia-0.96.1-format-strings.patch
 #gw from Fedora, fix security problem:
 # http://secunia.com/Advisories/33672/
 Patch4: dia-0.96.1-pythonpath.patch
+# http://bugzilla.gnome.org/show_bug.cgi?id=571862
+Patch5: dia-0.97-pre1-missing.patch
 URL: http://www.gnome.org/projects/dia 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	docbook-utils
@@ -32,7 +31,6 @@ BuildRequires:	png-devel
 BuildRequires:	libxslt-devel
 BuildRequires:	cairo-devel
 BuildRequires:	intltool
-BuildRequires:	imagemagick
 BuildRequires:	autoconf2.5
 BuildRequires:  PyXML
 BuildRequires:	libxslt-proc
@@ -58,9 +56,8 @@ diagrams to a custom fileformat and export to postscript.
 %setup -q -n %fname
 %patch -p1 -b .diagtkrc
 %patch1 -p1 -b .help
-%patch2 -p1 -b .fixdoc
-%patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 # gw fix doctype
 perl -pi -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
@@ -90,18 +87,16 @@ desktop-file-install --vendor="" \
   --add-category="GTK" \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/dia.desktop
 
-mkdir -p $RPM_BUILD_ROOT/%{_miconsdir}
-mkdir -p $RPM_BUILD_ROOT/%{_liconsdir}
-
-convert -scale 16x16 dia_gnome_icon.png $RPM_BUILD_ROOT/%{_miconsdir}/%{name}.png
-convert -scale 32x32 dia_gnome_icon.png $RPM_BUILD_ROOT/%{_iconsdir}/%{name}.png
-ln -s %_datadir/pixmaps/dia_gnome_icon.png $RPM_BUILD_ROOT/%{_liconsdir}/%{name}.png
 
 #for i in $RPM_BUILD_ROOT%{_datadir}/dia/sheets/{ER,GRAFCET,Istar,KAOS,Jackson}/*.xpm ; do
 # convert $i `dirname $i`/`basename $i .xpm`.png
 #done
 
 %{find_lang} %{name} --with-gnome
+for omf in %buildroot%_datadir/omf/*/*-??*.omf;do 
+echo "%lang($(basename $omf|sed -e s/.*-// -e s/.omf//)) $(echo $omf|sed -e s!%buildroot!!)" >> %name.lang
+done
+
 
 chmod 644 %buildroot%_libdir/%name/*.la
 
@@ -112,12 +107,14 @@ rm -fr $RPM_BUILD_ROOT
 %post
 %{update_menus}
 %{update_desktop_database}
+%update_icon_cache hicolor
 %endif
 
 %if %mdkversion < 200900
 %postun
 %{clean_menus}
 %{clean_desktop_database}
+%clean_icon_cache hicolor
 %endif
 
 %files -f %{name}.lang
@@ -128,10 +125,8 @@ rm -fr $RPM_BUILD_ROOT
 %{_mandir}/*/*
 %{_datadir}/dia
 %{_datadir}/mime-info/*
-%{_datadir}/pixmaps/*
 %{_datadir}/applications/dia.desktop
-%{_iconsdir}/%{name}.png
-%{_miconsdir}/%{name}.png
-%{_liconsdir}/%{name}.png
-
+%_datadir/icons/hicolor/*/*/*
+%dir %_datadir/omf/%name
+%_datadir/omf/%name/%name-C.omf
 
