@@ -1,4 +1,4 @@
-%define pre pre1
+%define pre pre2
 %if %pre
 %define rel 0.%pre.1
 %define fname %name-%version-%pre
@@ -19,8 +19,6 @@ Patch1: dia-0.96-pre2-help.patch
 #gw from Fedora, fix security problem:
 # http://secunia.com/Advisories/33672/
 Patch4: dia-0.96.1-pythonpath.patch
-# http://bugzilla.gnome.org/show_bug.cgi?id=571862
-Patch5: dia-0.97-pre1-missing.patch
 URL: http://www.gnome.org/projects/dia 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	docbook-utils
@@ -57,7 +55,6 @@ diagrams to a custom fileformat and export to postscript.
 %patch -p1 -b .diagtkrc
 %patch1 -p1 -b .help
 %patch4 -p1
-%patch5 -p1
 
 # gw fix doctype
 perl -pi -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
