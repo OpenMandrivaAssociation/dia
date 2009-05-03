@@ -1,4 +1,4 @@
-%define pre pre3
+%define pre 0
 %if %pre
 %define rel 0.%pre.1
 %define fname %name-%version-%pre
