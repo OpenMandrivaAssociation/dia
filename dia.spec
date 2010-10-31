@@ -3,7 +3,7 @@
 %define rel 0.%pre.1
 %define fname %name-%version-%pre
 %else 
-%define rel 1
+%define rel 2
 %define fname %name-%version
 %endif
 Summary: A gtk+ based diagram creation program
@@ -96,20 +96,6 @@ chmod 644 %buildroot%_libdir/%name/*.la
 %clean
 rm -fr $RPM_BUILD_ROOT
 
-%if %mdkversion < 200900
-%post
-%{update_menus}
-%{update_desktop_database}
-%update_icon_cache hicolor
-%endif
-
-%if %mdkversion < 200900
-%postun
-%{clean_menus}
-%{clean_desktop_database}
-%clean_icon_cache hicolor
-%endif
-
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc README TODO NEWS INSTALL COPYING ChangeLog AUTHORS
@@ -122,4 +108,3 @@ rm -fr $RPM_BUILD_ROOT
 %_datadir/icons/hicolor/*/*/*
 %dir %_datadir/omf/%name
 %_datadir/omf/%name/%name-C.omf
-
