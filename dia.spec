@@ -1,9 +1,9 @@
 %define pre 0
 %if %pre
-%define rel 0.%pre.2
+%define rel 0.%pre.3
 %define fname %name-%version-%pre
 %else 
-%define rel 3
+%define rel 4
 %define fname %name-%version
 %endif
 Summary: A gtk+ based diagram creation program
