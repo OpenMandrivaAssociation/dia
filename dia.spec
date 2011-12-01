@@ -64,7 +64,7 @@ perl -pi -e "s,/lib/(python),/%{_lib}/\1,g" configure
 %make libdia_la_LIBADD="\$(GTK_LIBS)"
 
 %install
-rm -fr $RPM_BUILD_ROOT
+rm -fr %{buildroot}
 
 %makeinstall_std
 
@@ -73,15 +73,15 @@ rm -f %buildroot%_datadir/gnome/help/%name/C
 mv %buildroot%_datadir/gnome/help/%name/en %buildroot%_datadir/gnome/help/%name/C
 
 #fix icon and invalid version in bugzilla field
-sed -i -e 's/@\(%{version}\)@/\1/g' -e 's/Icon=dia_gnome_icon.png/Icon=dia_gnome_icon/g' $RPM_BUILD_ROOT%{_datadir}/applications/dia.desktop
+sed -i -e 's/@\(%{version}\)@/\1/g' -e 's/Icon=dia_gnome_icon.png/Icon=dia_gnome_icon/g' %{buildroot}%{_datadir}/applications/dia.desktop
 
 desktop-file-install --vendor="" \
   --remove-category="Application" \
   --add-category="GTK" \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/dia.desktop
+  --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/dia.desktop
 
 
-#for i in $RPM_BUILD_ROOT%{_datadir}/dia/sheets/{ER,GRAFCET,Istar,KAOS,Jackson}/*.xpm ; do
+#for i in %{buildroot}%{_datadir}/dia/sheets/{ER,GRAFCET,Istar,KAOS,Jackson}/*.xpm ; do
 # convert $i `dirname $i`/`basename $i .xpm`.png
 #done
 
@@ -94,7 +94,7 @@ done
 chmod 644 %buildroot%_libdir/%name/*.la
 
 %clean
-rm -fr $RPM_BUILD_ROOT
+rm -fr %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root)
