@@ -21,8 +21,8 @@ Patch3: dia-0.97.2-vdx-fix-includes.patch
 URL: http://www.gnome.org/projects/dia 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	docbook-utils
-BuildRequires:	pygtk2.0
-BuildRequires:	python-devel
+#BuildRequires:	pygtk2.0
+#BuildRequires:	python-devel
 BuildRequires:	libgnomeui2-devel
 BuildRequires:	png-devel
 BuildRequires:	libxslt-devel
@@ -36,7 +36,7 @@ BuildRequires:	docbook-style-xsl
 BuildRequires:	desktop-file-utils
 #gw if we run aclocal or autogen.sh
 BuildRequires:	libtool gnome-common
-Requires:	pygtk2.0
+#Requires:	pygtk2.0
 #gw help viewer also for non-GNOME
 Suggests:	yelp
 Requires(post): desktop-file-utils
@@ -56,11 +56,9 @@ diagrams to a custom fileformat and export to postscript.
 # gw fix doctype
 perl -pi -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
 
-# Let it find python libraries gracefully
-perl -pi -e "s,/lib/(python),/%{_lib}/\1,g" configure
-
 %build
-%configure2_5x --enable-gnome --with-python --with-cairo
+%configure2_5x --enable-gnome --with-cairo
+#--with-python
 
 %make libdia_la_LIBADD="\$(GTK_LIBS)"
 
