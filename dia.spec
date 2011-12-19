@@ -1,21 +1,23 @@
 %define pre 0
 %if %pre
-%define rel 0.%pre.3
+%define rel 1
 %define fname %name-%version-%pre
 %else 
-%define rel 4
+%define rel 1
 %define fname %name-%version
 %endif
 Summary: A gtk+ based diagram creation program
 Name: dia
-Version: 0.97.1
+Version: 0.97.2
 Release: %mkrel %rel
 License: GPLv2+
 Group: Office
-Source: ftp://ftp.gnome.org/pub/GNOME/sources/%name/%{fname}.tar.bz2
-Patch: dia-0.97.1-use-own-gtkrc.patch
+Source: ftp://ftp.gnome.org/pub/GNOME/sources/%name/%{fname}.tar.xz
+Patch0: dia-0.97.1-use-own-gtkrc.patch
 #gw quick hack to find the gnome documentation
 Patch1: dia-0.97.1-help.patch
+Patch2: dia-0.97.2-fix-glib-includes.patch
+Patch3: dia-0.97.2-vdx-fix-includes.patch
 URL: http://www.gnome.org/projects/dia 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	docbook-utils
@@ -49,8 +51,7 @@ diagrams to a custom fileformat and export to postscript.
 
 %prep
 %setup -q -n %fname
-%patch -p1 -b .diagtkrc
-%patch1 -p1 -b .help
+%apply_patches
 
 # gw fix doctype
 perl -pi -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
