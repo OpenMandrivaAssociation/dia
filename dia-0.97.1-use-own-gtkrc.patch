@@ -1,0 +1,58 @@
+diff -p -up dia-0.97.1/app/app_procs.c.diagtkrc dia-0.97.1/app/app_procs.c
+--- dia-0.97.1/app/app_procs.c.diagtkrc	2010-01-24 17:56:08.000000000 +0100
++++ dia-0.97.1/app/app_procs.c	2010-01-25 10:18:39.000000000 +0100
+@@ -88,6 +88,7 @@ handle_initial_diagram(const char *input
+ 		       const char *outdir);
+ 
+ static void create_user_dirs(void);
++static void create_user_files(void);
+ static PluginInitResult internal_plugin_init(PluginInfo *info);
+ static gboolean handle_all_diagrams(GSList *files, char *export_file_name,
+ 				    char *export_file_format, char *size, char *show_layers,
+@@ -687,6 +688,7 @@ app_init (int argc, char **argv)
+   static char *show_layers = NULL;
+   gboolean made_conversions = FALSE;
+   GSList *files = NULL;
++  gchar *rc;
+   static const gchar **filenames = NULL;
+   int i = 0;
+ 
+@@ -891,6 +893,12 @@ app_init (int argc, char **argv)
+ 
+   if (dia_is_interactive) {
+     create_user_dirs();
++    create_user_files();
++
++    rc = dia_config_filename("diagtkrc");
++    gtk_rc_parse(rc); 
++    g_free(rc);
++ 
+ 
+     if (!nosplash)
+       app_splash_init("");
+@@ -1159,6 +1167,25 @@ app_exit(void)
+   return TRUE;
+ }
+ 
++static void create_user_files(void)
++{
++  gchar *rc = NULL;
++
++  rc = dia_config_filename("diagtkrc");
++
++  /* If the file does not exist, we put in our defaults */
++  if (!g_file_test(rc, G_FILE_TEST_EXISTS)) {
++    FILE *f;
++
++    /* Never mind if it fails */
++    if ((f = fopen(rc, "w"))!= NULL) {
++      fprintf(f, "gtk-can-change-accels = 1");
++      fclose(f);
++    }
++  }
++  g_free(rc);
++}
++
+ static void create_user_dirs(void)
+ {
+   gchar *dir, *subdir;

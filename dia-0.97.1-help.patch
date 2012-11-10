@@ -1,0 +1,36 @@
+diff -p -up dia-0.97.1/app/commands.c.help dia-0.97.1/app/commands.c
+--- dia-0.97.1/app/commands.c.help	2009-11-07 18:13:53.000000000 +0100
++++ dia-0.97.1/app/commands.c	2010-01-25 10:21:02.000000000 +0100
+@@ -673,7 +673,7 @@ help_manual_callback (GtkAction *action)
+       }
+ #else
+       helpindex = g_strconcat(helpdir, G_DIR_SEPARATOR_S, dentry,
+-			      G_DIR_SEPARATOR_S "index.html", NULL);
++			      G_DIR_SEPARATOR_S "dia.xml", NULL);
+ #endif
+       bestscore = score;
+     }
+@@ -689,7 +689,7 @@ help_manual_callback (GtkAction *action)
+ # define SW_SHOWNORMAL 1
+   ShellExecuteA (0, "open", helpindex, NULL, helpdir, SW_SHOWNORMAL);
+ #else
+-  command = getenv("BROWSER");
++  command = "yelp";
+   command = g_strdup_printf("%s 'file://%s' &", command ? command : "xdg-open", helpindex);
+   system(command);
+   g_free(command);
+diff -p -up dia-0.97.1/lib/dia_dirs.c.help dia-0.97.1/lib/dia_dirs.c
+--- dia-0.97.1/lib/dia_dirs.c.help	2009-11-07 18:13:53.000000000 +0100
++++ dia-0.97.1/lib/dia_dirs.c	2010-01-25 10:19:26.000000000 +0100
+@@ -63,7 +63,10 @@ dia_get_data_directory(const gchar* subd
+   if (strlen (subdir) == 0)		
+     return g_strconcat (DATADIR, NULL);
+   else
+-    return g_strconcat (DATADIR, G_DIR_SEPARATOR_S, subdir, NULL);
++    if (!g_ascii_strcasecmp(subdir, "help"))
++      return  g_strdup("/usr/share/gnome/help/dia");
++    else
++      return g_strconcat (DATADIR, G_DIR_SEPARATOR_S, subdir, NULL);
+ #endif
+ }
+ 
