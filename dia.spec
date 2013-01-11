@@ -2,24 +2,23 @@
 %if %pre
 %define rel 1
 %define fname %name-%version-%pre
-%else 
-%define rel 1
+%else
+%define rel 2
 %define fname %name-%version
 %endif
-Summary: A gtk+ based diagram creation program
-Name: dia
-Version: 0.97.2
-Release: %mkrel %rel
-License: GPLv2+
-Group: Office
-Source: ftp://ftp.gnome.org/pub/GNOME/sources/%name/%{fname}.tar.xz
-Patch0: dia-0.97.1-use-own-gtkrc.patch
+Summary:	A gtk+ based diagram creation program
+Name:		dia
+Version:	0.97.2
+Release:	%rel
+License:	GPLv2+
+Group:		Office
+Source:		ftp://ftp.gnome.org/pub/GNOME/sources/%name/%{fname}.tar.xz
+Patch0:		dia-0.97.1-use-own-gtkrc.patch
 #gw quick hack to find the gnome documentation
-Patch1: dia-0.97.1-help.patch
-Patch2: dia-0.97.2-fix-glib-includes.patch
-Patch3: dia-0.97.2-vdx-fix-includes.patch
-URL: http://www.gnome.org/projects/dia 
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
+Patch1:		dia-0.97.1-help.patch
+Patch2:		dia-0.97.2-fix-glib-includes.patch
+Patch3:		dia-0.97.2-vdx-fix-includes.patch
+URL:		http://www.gnome.org/projects/dia
 BuildRequires:	docbook-utils
 #BuildRequires:	pygtk2.0
 #BuildRequires:	python-devel
@@ -29,18 +28,19 @@ BuildRequires:	libxslt-devel
 BuildRequires:	cairo-devel
 BuildRequires:	intltool
 BuildRequires:	autoconf2.5
-BuildRequires:  PyXML
+BuildRequires:	PyXML
 BuildRequires:	libxslt-proc
 BuildRequires:	scrollkeeper
 BuildRequires:	docbook-style-xsl
 BuildRequires:	desktop-file-utils
 #gw if we run aclocal or autogen.sh
-BuildRequires:	libtool gnome-common
+BuildRequires:	libtool
+BuildRequires:	gnome-common
 #Requires:	pygtk2.0
 #gw help viewer also for non-GNOME
 Suggests:	yelp
-Requires(post): desktop-file-utils
-Requires(postun): desktop-file-utils
+Requires(post):	desktop-file-utils
+Requires(postun):	desktop-file-utils
 
 %description
 Dia is a program designed to be much like the Windows
@@ -63,8 +63,6 @@ perl -pi -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/
 %make libdia_la_LIBADD="\$(GTK_LIBS)"
 
 %install
-rm -fr %{buildroot}
-
 %makeinstall_std
 
 # fix en documentation directory name
@@ -92,11 +90,7 @@ done
 
 chmod 644 %buildroot%_libdir/%name/*.la
 
-%clean
-rm -fr %{buildroot}
-
 %files -f %{name}.lang
-%defattr(-,root,root)
 %doc README TODO NEWS INSTALL COPYING ChangeLog AUTHORS
 %{_bindir}/*
 %{_libdir}/dia
