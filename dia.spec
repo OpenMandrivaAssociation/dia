@@ -99,5 +99,3 @@ chmod 644 %buildroot%_libdir/%name/*.la
 %{_datadir}/mime-info/*
 %{_datadir}/applications/dia.desktop
 %_datadir/icons/hicolor/*/*/*
-%dir %_datadir/omf/%name
-%_datadir/omf/%name/%name-C.omf
