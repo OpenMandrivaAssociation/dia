@@ -83,9 +83,9 @@ desktop-file-install --vendor="" \
 #done
 
 %{find_lang} %{name} --with-gnome
-for omf in %buildroot%_datadir/omf/*/*-??*.omf;do 
-echo "%lang($(basename $omf|sed -e s/.*-// -e s/.omf//)) $(echo $omf|sed -e s!%buildroot!!)" >> %name.lang
-done
+#for omf in %buildroot%_datadir/omf/*/*-??*.omf;do 
+#echo "%lang($(basename $omf|sed -e s/.*-// -e s/.omf//)) $(echo $omf|sed -e s!%buildroot!!)" >> %name.lang
+#done
 
 
 chmod 644 %buildroot%_libdir/%name/*.la
