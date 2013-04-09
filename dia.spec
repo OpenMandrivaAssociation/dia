@@ -35,7 +35,7 @@ diagrams to a custom fileformat and export to postscript.
 %apply_patches
 
 # gw fix doctype
-perl -pi -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
+sed -i -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
 
 %build
 %configure2_5x \
@@ -74,3 +74,4 @@ desktop-file-install \
 %{_datadir}/applications/dia.desktop
 %{_iconsdir}/hicolor/*/*/*
 %{_mandir}/*/*
+
