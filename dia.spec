@@ -4,7 +4,7 @@
 Summary:	A gtk+ based diagram creation program
 Name:		dia
 Version:	0.97.2
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		Office
 Url:		http://www.gnome.org/projects/dia
@@ -18,7 +18,7 @@ Patch3:		dia-0.97.2-vdx-fix-includes.patch
 BuildRequires:	intltool
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(libgnomeui-2.0)
-BuildRequires:	pkgconfig(libpng15)
+BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 Suggests:	yelp
 Requires(post,postun):	desktop-file-utils
