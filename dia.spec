@@ -4,7 +4,7 @@
 Summary:	A gtk+ based diagram creation program
 Name:		dia
 Version:	0.97.2
-Release:	4
+Release:	5
 License:	GPLv2+
 Group:		Office
 Url:		http://www.gnome.org/projects/dia
@@ -14,6 +14,7 @@ Patch0:		dia-0.97.1-use-own-gtkrc.patch
 Patch1:		dia-0.97.1-help.patch
 Patch2:		dia-0.97.2-fix-glib-includes.patch
 Patch3:		dia-0.97.2-vdx-fix-includes.patch
+Patch4:		dia-0.97-startup_crash.patch
 
 BuildRequires:	intltool
 BuildRequires:	pkgconfig(cairo)
