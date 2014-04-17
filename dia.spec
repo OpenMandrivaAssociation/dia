@@ -4,7 +4,7 @@
 Summary:	A gtk+ based diagram creation program
 Name:		dia
 Version:	0.97.2
-Release:	6
+Release:	7
 License:	GPLv2+
 Group:		Office
 Url:		http://www.gnome.org/projects/dia
@@ -18,7 +18,7 @@ Patch4:		dia-0.97-startup_crash.patch
 
 BuildRequires:	intltool
 BuildRequires:	pkgconfig(cairo)
-BuildRequires:	pkgconfig(libgnomeui-2.0)
+BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 Suggests:	yelp
@@ -39,18 +39,14 @@ diagrams to a custom fileformat and export to postscript.
 sed -i -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
 
 %build
+export LIBS=-lgmodule-2.0
 %configure2_5x \
-	--enable-gnome \
 	--with-cairo
 
 %make libdia_la_LIBADD="\$(GTK_LIBS)"
 
 %install
 %makeinstall_std
-
-# fix en documentation directory name
-rm -f %{buildroot}%{_datadir}/gnome/help/%{name}/C
-mv %{buildroot}%{_datadir}/gnome/help/%{name}/en %{buildroot}%{_datadir}/gnome/help/%{name}/C
 
 #fix icon and invalid version in bugzilla field
 sed -i -e 's/@\(%{version}\)@/\1/g' \
