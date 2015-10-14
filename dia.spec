@@ -19,6 +19,7 @@ BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
+BuildRequires:	xsltproc
 Suggests:	yelp
 Requires(post,postun):	desktop-file-utils
 
