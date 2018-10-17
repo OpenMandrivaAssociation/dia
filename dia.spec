@@ -20,6 +20,7 @@ BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	xsltproc
+BuildRequires:	pkgconfig(libxml-2.0)
 Suggests:	yelp
 Requires(post,postun):	desktop-file-utils
 
