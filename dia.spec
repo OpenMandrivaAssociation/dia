@@ -21,6 +21,7 @@ BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	xsltproc
 BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	xmlto docbook-dtds
 Suggests:	yelp
 Requires(post,postun):	desktop-file-utils
 
