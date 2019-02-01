@@ -60,7 +60,7 @@ desktop-file-install \
 	--dir %{buildroot}%{_datadir}/applications \
 	%{buildroot}%{_datadir}/applications/dia.desktop
 
-%find_lang %{name} --with-gnome
+%find_lang %{name} --with-gnome --all-name --with-html
 
 %files -f %{name}.lang
 %doc README TODO NEWS INSTALL COPYING ChangeLog AUTHORS
@@ -71,4 +71,4 @@ desktop-file-install \
 %{_datadir}/applications/dia.desktop
 %{_iconsdir}/hicolor/*/*/*
 %{_mandir}/*/*
-
+%doc %{_docdir}/dia
