@@ -34,7 +34,7 @@ diagrams to a custom fileformat and export to postscript.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 # gw fix doctype
 sed -i -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
