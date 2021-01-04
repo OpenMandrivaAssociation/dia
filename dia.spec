@@ -4,19 +4,22 @@
 Summary:	A gtk+ based diagram creation program
 Name:		dia
 Version:	0.97.3
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		Office
 Url:		http://www.gnome.org/projects/dia
-Source0:	ftp://ftp.gnome.org/pub/GNOME/sources/dia/%{url_ver}/%{name}-%{version}.tar.xz
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/dia/%{url_ver}/%{name}-%{version}.tar.xz
 Patch0:		dia-0.97.1-use-own-gtkrc.patch
 #gw quick hack to find the gnome documentation
 Patch1:		dia-0.97.1-help.patch
 Patch3:		dia-0.97.2-vdx-fix-includes.patch
+Patch4:		dia-0.97.3-clang.patch
+Patch5:		dia-0.9.3-cve-2019-19451.patch
 
 BuildRequires:	intltool
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(libart-2.0)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	xsltproc
