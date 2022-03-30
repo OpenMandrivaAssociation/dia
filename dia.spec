@@ -4,7 +4,7 @@
 Summary:	A gtk+ based diagram creation program
 Name:		dia
 Version:	0.97.3
-Release:	4
+Release:	5
 License:	GPLv2+
 Group:		Office
 Url:		http://www.gnome.org/projects/dia
@@ -36,21 +36,19 @@ this first version there is support for UML static structure diagrams
 diagrams to a custom fileformat and export to postscript.
 
 %prep
-%setup -q
-%autopatch -p1
-
+%autosetup -p1
 # gw fix doctype
 sed -i -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
 
 %build
 export LIBS=-lgmodule-2.0
-%configure2_5x \
+%configure \
 	--with-cairo
 
 %make libdia_la_LIBADD="\$(GTK_LIBS)"
 
 %install
-%makeinstall_std
+%make_install
 
 #fix icon and invalid version in bugzilla field
 sed -i -e 's/@\(%{version}\)@/\1/g' \
@@ -75,4 +73,7 @@ desktop-file-install \
 %{_datadir}/applications/dia.desktop
 %{_iconsdir}/hicolor/*/*/*
 %{_mandir}/*/*
-%doc %{_docdir}/dia
+%lang(en) %doc %{_docdir}/dia/en
+%lang(eu) %doc %{_docdir}/dia/eu
+%lang(fr) %doc %{_docdir}/dia/fr
+%lang(pl) %doc %{_docdir}/dia/pl
