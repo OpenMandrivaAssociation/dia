@@ -4,7 +4,7 @@
 Summary:	A gtk+ based diagram creation program
 Name:		dia
 Version:	0.97.3
-Release:	5
+Release:	6
 License:	GPLv2+
 Group:		Office
 Url:		http://www.gnome.org/projects/dia
