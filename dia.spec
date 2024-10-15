@@ -16,6 +16,7 @@ Patch2:		fix-libdia-install-dir.patch
 BuildRequires:	intltool
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:  pkgconfig(graphene-1.0)
 BuildRequires:	pkgconfig(libart-2.0)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
