@@ -1,0 +1,99 @@
+From: Philippe SWARTVAGHER <phil.swart@gmx.fr>
+Date: Sat, 17 Feb 2024 17:43:43 +0100
+Subject: Install libdia.so in the correct folder
+Last-Update: 2022-05-26
+Forwarded: not-needed
+
+---
+ app/meson.build             | 3 ++-
+ lib/meson.build             | 1 +
+ objects/meson.build         | 1 +
+ plug-ins/layout/meson.build | 1 +
+ plug-ins/meson.build        | 1 +
+ plug-ins/python/meson.build | 3 ++-
+ plug-ins/xslt/meson.build   | 1 +
+ 7 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/app/meson.build b/app/meson.build
+index e56d556..6f0022c 100644
+--- a/app/meson.build
++++ b/app/meson.build
+@@ -136,7 +136,8 @@ diaapp = executable('dia',
+                     dependencies: [diaapp_dep] + [config_dep],
+                     win_subsystem: 'windows',
+                     export_dynamic: true,  # some plugins require this.
+-                    install: true)
++                    install: true,
++                    install_rpath: dialibdir)
+ 
+ if build_machine.system() == 'windows'
+     dia_win_remote = executable(
+diff --git a/lib/meson.build b/lib/meson.build
+index f1ffb96..0de640c 100644
+--- a/lib/meson.build
++++ b/lib/meson.build
+@@ -238,6 +238,7 @@ libdia_lib = library('dia',
+     c_args: ['-Wall', '-DLIBDIA_COMPILATION'],
+     vs_module_defs: 'libdia.def',
+     install: true,
++    install_dir: dialibdir,
+ )
+ 
+ libdia_dep = declare_dependency (include_directories: libdia_inc,
+diff --git a/objects/meson.build b/objects/meson.build
+index 278020f..3884654 100644
+--- a/objects/meson.build
++++ b/objects/meson.build
+@@ -26,5 +26,6 @@ foreach o : dia_object_desc
+         install: true,
+         install_dir: dialibdir,
+         name_suffix: g_module_suffix,
++        install_rpath: dialibdir,
+     )
+ endforeach
+diff --git a/plug-ins/layout/meson.build b/plug-ins/layout/meson.build
+index 968127e..20ca47a 100644
+--- a/plug-ins/layout/meson.build
++++ b/plug-ins/layout/meson.build
+@@ -22,4 +22,5 @@ shared_module(
+     install_dir: dialibdir,
+     include_directories: diaapp_inc,
+     name_suffix: g_module_suffix,
++    install_rpath: dialibdir
+ )
+diff --git a/plug-ins/meson.build b/plug-ins/meson.build
+index c503ca7..5c33d67 100644
+--- a/plug-ins/meson.build
++++ b/plug-ins/meson.build
+@@ -41,5 +41,6 @@ foreach p : install_plugins_desc
+         install: p.get('install', true),
+         install_dir: dialibdir,
+         name_suffix: g_module_suffix,
++        install_rpath: dialibdir
+     )
+ endforeach
+diff --git a/plug-ins/python/meson.build b/plug-ins/python/meson.build
+index e307d4d..d15c566 100644
+--- a/plug-ins/python/meson.build
++++ b/plug-ins/python/meson.build
+@@ -56,7 +56,8 @@ if py3_dep.found()
+         # Python headers trigger this warning. Let's not obscure the others.
+         c_args: [
+           '-Wno-declaration-after-statement',
+-        ]
++        ],
++        install_rpath: dialibdir,
+     )
+ 
+     install_data(python_scripts, install_dir: pkgdatadir / 'python')
+diff --git a/plug-ins/xslt/meson.build b/plug-ins/xslt/meson.build
+index 12eb1bb..7b2c649 100644
+--- a/plug-ins/xslt/meson.build
++++ b/plug-ins/xslt/meson.build
+@@ -26,5 +26,6 @@ if libxslt_dep.found()
+         install: true,
+         install_dir: dialibdir,
+         name_suffix: g_module_suffix,
++        install_rpath: dialibdir
+     )
+ endif

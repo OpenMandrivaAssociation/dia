@@ -1,0 +1,14 @@
+diff --git a/plug-ins/vdx/vdx-export.c b/plug-ins/vdx/vdx-export.c
+index dd94bffcd..18966b0ab 100644
+--- a/plug-ins/vdx/vdx-export.c
++++ b/plug-ins/vdx/vdx-export.c
+@@ -29,6 +29,9 @@
+ #include <glib/gi18n-lib.h>
+ 
+ #include <stdio.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <unistd.h>
+ 
+ #include <string.h>
+ #include <math.h>

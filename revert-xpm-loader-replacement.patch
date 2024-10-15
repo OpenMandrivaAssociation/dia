@@ -1,0 +1,254 @@
+From: Philippe SWARTVAGHER <phil.swart@gmx.fr>
+Subject: Revert switch from gdk_pixbuf_new_from_xpm_data to xpm_pixbuf_load
+Last-Update: 2024-06-29
+Forwarded: not-needed
+
+This patch reverts upstream commit 1ba72d126055130474b4ce589b1f3002972ba490
+"general: use xpm-pixbuf to load xpms". As mentioned in the upstream commit
+message, GdkPixbuf decided to disable weak-maintained loaders. The
+corresponding MR for GdkPixbuf is
+https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/merge_requests/163 and its revert
+is discussed in this MR
+https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/merge_requests/169. From a Debian
+perspective, the affected loaders are still included (see
+https://salsa.debian.org/gnome-team/gdk-pixbuf/-/commit/fa031d415056ba80ffa35afcd6e1263692849970).
+
+To address this problem, upstream maintainer of Dia decided to maintain
+xpm-pixbuf (https://gitlab.gnome.org/ZanderBrown/xpm-pixbuf), "a fork of the
+old GdkPixbuf XPM code the acts as a drop-in replacement". However, using
+xpm-pixbuf in Dia in Debian would require to package xpm-pixbuf as a standalone
+Debian package. Given that:
+- so far xpm-pixbuf seems to be used only in Dia,
+- xpm is still supported by Debian's GdkPixbuf,
+- there are ongoing upstream discussions about this change in GdkPixbuf,
+- and finally other projects providing the set of disabled loaders start to
+  emerge,
+do not include the commit switching from gdk_pixbuf_new_from_xpm_data() to
+xpm_pixbuf_load().
+
+diff --git a/app/dia-colour-area.c b/app/dia-colour-area.c
+index 0b65c98f3..9fb1f40d8 100644
+--- a/app/dia-colour-area.c
++++ b/app/dia-colour-area.c
+@@ -22,8 +22,6 @@
+ 
+ #include <stdio.h>
+ 
+-#include <xpm-pixbuf.h>
+-
+ #include "dia-colour-area.h"
+ #include "attributes.h"
+ #include "persistence.h"
+@@ -268,8 +266,8 @@ dia_colour_area_class_init (DiaColourAreaClass *class)
+ static void
+ dia_colour_area_init (DiaColourArea *self)
+ {
+-  self->reset = xpm_pixbuf_load (default_xpm);
+-  self->swap = xpm_pixbuf_load (swap_xpm);
++  self->reset = gdk_pixbuf_new_from_xpm_data (default_xpm);
++  self->swap = gdk_pixbuf_new_from_xpm_data (swap_xpm);
+ 
+   self->active_color = 0;
+ 
+diff --git a/app/dia-page-layout.c b/app/dia-page-layout.c
+index 6256a88b4..f6abd1e1e 100644
+--- a/app/dia-page-layout.c
++++ b/app/dia-page-layout.c
+@@ -25,8 +25,6 @@
+ 
+ #include <glib/gi18n-lib.h>
+ 
+-#include <xpm-pixbuf.h>
+-
+ #include "dia-page-layout.h"
+ 
+ #include "pixmaps/portrait.xpm"
+@@ -148,7 +146,7 @@ dia_page_layout_init (DiaPageLayout *self)
+ 
+   self->orient_portrait = gtk_radio_button_new (NULL);
+ 
+-  wid = gtk_image_new_from_pixbuf (xpm_pixbuf_load (portrait_xpm));
++  wid = gtk_image_new_from_pixbuf (gdk_pixbuf_new_from_xpm_data (portrait_xpm));
+   gtk_container_add (GTK_CONTAINER (self->orient_portrait), wid);
+   gtk_widget_show (wid);
+ 
+@@ -157,7 +155,7 @@ dia_page_layout_init (DiaPageLayout *self)
+ 
+   self->orient_landscape = gtk_radio_button_new (
+         gtk_radio_button_get_group (GTK_RADIO_BUTTON (self->orient_portrait)));
+-  wid = gtk_image_new_from_pixbuf (xpm_pixbuf_load (landscape_xpm));
++  wid = gtk_image_new_from_pixbuf (gdk_pixbuf_new_from_xpm_data (landscape_xpm));
+   gtk_container_add (GTK_CONTAINER (self->orient_landscape), wid);
+   gtk_widget_show (wid);
+ 
+diff --git a/app/navigation.c b/app/navigation.c
+index 94ed60961..4b4cd1c0b 100644
+--- a/app/navigation.c
++++ b/app/navigation.c
+@@ -24,8 +24,6 @@
+ 
+ #include <gtk/gtk.h>
+ 
+-#include <xpm-pixbuf.h>
+-
+ #include "diagram.h"
+ #include "display.h"
+ #include "renderer/diacairo.h"
+@@ -489,7 +487,7 @@ navigation_popup_new (DDisplay *ddisp)
+                     "released", G_CALLBACK (on_button_navigation_popup_released),
+                     NULL);
+ 
+-  pixbuf = xpm_pixbuf_load (nav_xpm);
++  pixbuf = gdk_pixbuf_new_from_xpm_data (nav_xpm);
+ 
+   image = gtk_image_new_from_pixbuf (pixbuf);
+ 
+diff --git a/app/sheet-editor/sheet-editor-button.c b/app/sheet-editor/sheet-editor-button.c
+index 253eaa469..185890be2 100644
+--- a/app/sheet-editor/sheet-editor-button.c
++++ b/app/sheet-editor/sheet-editor-button.c
+@@ -24,8 +24,6 @@
+ 
+ #include <glib/gi18n-lib.h>
+ 
+-#include <xpm-pixbuf.h>
+-
+ #include "sheet-editor-button.h"
+ #include "widgets.h"
+ #include "message.h"
+@@ -79,7 +77,7 @@ get_object_pixbuf (SheetObject *so)
+     if (g_str_has_prefix ((char *) so->pixmap, "res:")) {
+       pixbuf = pixbuf_from_resource (((char *) so->pixmap) + 4);
+     } else {
+-      pixbuf = xpm_pixbuf_load (so->pixmap);
++      pixbuf = gdk_pixbuf_new_from_xpm_data ((const char **) so->pixmap);
+     }
+   } else {
+     if (so->pixmap_file != NULL) {
+diff --git a/app/toolbox.c b/app/toolbox.c
+index 746ede54c..7bfc6c899 100644
+--- a/app/toolbox.c
++++ b/app/toolbox.c
+@@ -21,9 +21,6 @@
+ #include <glib/gi18n-lib.h>
+ 
+ #include <gtk/gtk.h>
+-
+-#include <xpm-pixbuf.h>
+-
+ #include "gtkwrapbox.h"
+ #include "gtkhwrapbox.h"
+ 
+@@ -305,7 +302,7 @@ fill_sheet_wbox(Sheet *sheet)
+       if (g_str_has_prefix ((const char *) sheet_obj->pixmap, "res:")) {
+         pixbuf = pixbuf_from_resource ((const char *) sheet_obj->pixmap + 4);
+       } else {
+-        pixbuf = xpm_pixbuf_load (sheet_obj->pixmap);
++        pixbuf = gdk_pixbuf_new_from_xpm_data (sheet_obj->pixmap);
+         if (pixbuf == NULL) {
+           g_warning ("Problem loading icon for ‘%s’", sheet_obj->description);
+           pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+@@ -334,7 +331,7 @@ fill_sheet_wbox(Sheet *sheet)
+           pixbuf = cropped;
+         }
+       } else {
+-        pixbuf = xpm_pixbuf_load (missing);
++        pixbuf = gdk_pixbuf_new_from_xpm_data (missing);
+ 
+         message_warning ("failed to load icon for file\n %s\n cause=%s",
+                          sheet_obj->pixmap_file,
+@@ -342,8 +339,8 @@ fill_sheet_wbox(Sheet *sheet)
+       }
+     } else {
+       DiaObjectType *type;
+-      type = object_get_type (sheet_obj->object_type);
+-      pixbuf = dia_object_type_get_icon (type);
++      type = object_get_type(sheet_obj->object_type);
++      pixbuf = gdk_pixbuf_new_from_xpm_data (type->pixmap);
+     }
+ 
+     if (pixbuf) {
+diff --git a/build-aux/flatpak/org.gnome.Dia.json b/build-aux/flatpak/org.gnome.Dia.json
+index b265a74e2..73fc87d29 100644
+--- a/build-aux/flatpak/org.gnome.Dia.json
++++ b/build-aux/flatpak/org.gnome.Dia.json
+@@ -24,17 +24,6 @@
+         "*.a"
+     ],
+     "modules": [
+-        {
+-            "name": "xpm-pixbuf",
+-            "buildsystem": "meson",
+-            "sources": [
+-                {
+-                    "type": "git",
+-                    "url": "https://gitlab.gnome.org/ZanderBrown/xpm-pixbuf.git",
+-                    "branch" : "main"
+-                }
+-            ]
+-        },
+         {
+             "name": "dia",
+             "buildsystem": "meson",
+diff --git a/lib/meson.build b/lib/meson.build
+index 5b3ce0bd1..f1ffb9659 100644
+--- a/lib/meson.build
++++ b/lib/meson.build
+@@ -228,7 +228,6 @@ libdia_deps = [
+     libzlib_dep,
+     gmodule_dep,
+     graphene_dep,
+-    xpm_dep,
+ ]
+ 
+ libdia_inc = include_directories('.')
+diff --git a/lib/object.c b/lib/object.c
+index c307c3b9d..8f409e949 100644
+--- a/lib/object.c
++++ b/lib/object.c
+@@ -23,8 +23,6 @@
+ #include <stdio.h>
+ #include <string.h>
+ 
+-#include <xpm-pixbuf.h>
+-
+ #define _DIA_OBJECT_BUILD 1
+ #include "object.h"
+ #include "diagramdata.h" /* for Layer */
+@@ -1425,6 +1423,14 @@ dia_object_type_get_icon (const DiaObjectType *type)
+ 
+   if (g_str_has_prefix ((char *) icon_data, "res:")) {
+     pixbuf = pixbuf_from_resource (((char *) icon_data) + 4);
++  } else if (icon_data && strncmp ((char *) icon_data, "GdkP", 4) == 0) {
++    /* GTK3: We will remove this in Dia 2.0 but is retained to maintain
++     * compatability with 0.97.3 objects */
++    g_warning ("Object '%s' has an inline icon, this is deprecated",
++               type->name);
++    G_GNUC_BEGIN_IGNORE_DEPRECATIONS
++    pixbuf = gdk_pixbuf_new_from_inline (-1, (guint8 *) icon_data, TRUE, NULL);
++    G_GNUC_END_IGNORE_DEPRECATIONS
+   } else if (type->pixmap_file != NULL) {
+     GError *error = NULL;
+     pixbuf = gdk_pixbuf_new_from_file (type->pixmap_file, &error);
+@@ -1433,7 +1439,8 @@ dia_object_type_get_icon (const DiaObjectType *type)
+       g_clear_error (&error);
+     }
+   } else {
+-    pixbuf = xpm_pixbuf_load (icon_data);
++    const char **pixmap_data = icon_data;
++    pixbuf = gdk_pixbuf_new_from_xpm_data (pixmap_data);
+   }
+ 
+   return pixbuf;
+diff --git a/meson.build b/meson.build
+index fef58f944..06d5d6d5b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -22,7 +22,6 @@ gmodule_dep = dependency('gmodule-2.0')
+ libzlib_dep = dependency('zlib')
+ libcairo_dep = dependency('cairo')
+ graphene_dep = dependency('graphene-1.0', version: '>= 1.10')
+-xpm_dep = dependency('xpm-pixbuf')
+ 
+ # Not required since not all platforms ship a separate libm.
+ libm_dep = cc.find_library('m', required: false)

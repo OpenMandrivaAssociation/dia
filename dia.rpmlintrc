@@ -1,0 +1,5 @@
+addFilter("W: files-duplicate")
+addFilter("W: unstripped-binary-or-object")
+addFilter("E: incorrect-fsf-address")
+addFilter("E: env-script-interpreter")
+addFilter(" E: script-without-shebang")

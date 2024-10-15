@@ -1,21 +1,18 @@
 %define _disable_ld_no_undefined 1
 %define url_ver %(echo %{version}|cut -d. -f1,2)
+%define libname %mklibname %{name}
 
 Summary:	A gtk+ based diagram creation program
 Name:		dia
-Version:	0.97.3
+Version:	0.98.0
 Release:	6
 License:	GPLv2+
 Group:		Office
 Url:		http://www.gnome.org/projects/dia
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/dia/%{url_ver}/%{name}-%{version}.tar.xz
-Patch0:		dia-0.97.1-use-own-gtkrc.patch
-#gw quick hack to find the gnome documentation
-Patch1:		dia-0.97.1-help.patch
-Patch3:		dia-0.97.2-vdx-fix-includes.patch
-Patch4:		dia-0.97.3-clang.patch
-Patch5:		dia-0.9.3-cve-2019-19451.patch
-
+Patch0:		revert-xpm-loader-replacement.patch
+Patch1:		dia-0.98.0-vdx-fix-includes.patch
+Patch2:		fix-libdia-install-dir.patch
 BuildRequires:	intltool
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(gtk+-2.0)
@@ -38,42 +35,40 @@ diagrams to a custom fileformat and export to postscript.
 %prep
 %autosetup -p1
 # gw fix doctype
+chmod +x %{_builddir}/%{buildsubdir}/plug-ins/python/doxrev.py
+chmod +x %{_builddir}/%{buildsubdir}/plug-ins/python/python-startup.py
 sed -i -e "s^../../dtd/docbookx.dtd^http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd^" doc/*/dia.xml
+export CC=/usr/bin/gcc
+export CXX=/usr/bin/g++
+%meson 	
 
-%build
+%build 
 export LIBS=-lgmodule-2.0
-%configure \
-	--with-cairo
+chmod -x %{_builddir}/%{buildsubdir}/shapes/Civil/civil_aerator.shape
 
-%make libdia_la_LIBADD="\$(GTK_LIBS)"
+%meson_build -v
 
-%install
-%make_install
-
-#fix icon and invalid version in bugzilla field
-sed -i -e 's/@\(%{version}\)@/\1/g' \
-	-e 's/Icon=dia_gnome_icon.png/Icon=dia_gnome_icon/g' \
-	%{buildroot}%{_datadir}/applications/dia.desktop
-
-desktop-file-install \
-	--vendor="" \
-	--remove-category="Application" \
-	--add-category="GTK" \
-	--dir %{buildroot}%{_datadir}/applications \
-	%{buildroot}%{_datadir}/applications/dia.desktop
+%meson_install
 
 %find_lang %{name} --with-gnome --all-name --with-html
 
 %files -f %{name}.lang
-%doc README TODO NEWS INSTALL COPYING ChangeLog AUTHORS
+%doc  TODO NEWS COPYING AUTHORS
 %{_bindir}/*
-%{_libdir}/dia
-%{_datadir}/dia
-%{_datadir}/mime-info/*
-%{_datadir}/applications/dia.desktop
+%{_libdir}/*
+%{_datadir}/dia/python
+%{_datadir}/dia/shapes
+%{_datadir}/dia/ui
+%{_datadir}/dia/sheets
+%{_datadir}/dia/xslt
+%{_datadir}/dia/python-startup.py
+%{_datadir}/metainfo/*.xml
+%{_datadir}/thumbnailers/*.thumbnailer
+%{_datadir}/applications/org.gnome.Dia.desktop
 %{_iconsdir}/hicolor/*/*/*
 %{_mandir}/*/*
-%lang(en) %doc %{_docdir}/dia/en
-%lang(eu) %doc %{_docdir}/dia/eu
-%lang(fr) %doc %{_docdir}/dia/fr
-%lang(pl) %doc %{_docdir}/dia/pl
+
+%lang(en) %doc %{_datadir}/dia/help/en/
+%lang(eu) %doc %{_datadir}/dia/help/eu/
+%lang(fr) %doc %{_datadir}/dia/help/fr/
+%lang(de) %doc %{_datadir}/dia/help/de/
