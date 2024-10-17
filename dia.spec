@@ -15,12 +15,14 @@ Patch1:		dia-0.98.0-vdx-fix-includes.patch
 Patch2:		fix-libdia-install-dir.patch
 BuildRequires:	intltool
 BuildRequires:	pkgconfig(cairo)
-BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:  pkgconfig(graphene-1.0)
 BuildRequires:	pkgconfig(libart-2.0)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(pangocairo)
 BuildRequires:	xsltproc
 BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:  pkgconfig(python)
 BuildRequires:	xmlto docbook-dtds
 Suggests:	yelp
 Requires(post,postun):	desktop-file-utils
