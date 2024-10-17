@@ -8,7 +8,7 @@ Version:	0.98.0
 Release:	6
 License:	GPLv2+
 Group:		Office
-Url:		http://www.gnome.org/projects/dia
+Url:		https://www.gnome.org/projects/dia
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/dia/%{url_ver}/%{name}-%{version}.tar.xz
 Patch0:		revert-xpm-loader-replacement.patch
 Patch1:		dia-0.98.0-vdx-fix-includes.patch
