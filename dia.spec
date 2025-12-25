@@ -14,6 +14,7 @@ Patch0:		revert-xpm-loader-replacement.patch
 Patch1:		dia-0.98.0-vdx-fix-includes.patch
 Patch2:		fix-libdia-install-dir.patch
 BuildRequires:	intltool
+BuildRequires:  meson
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:  pkgconfig(graphene-1.0)
